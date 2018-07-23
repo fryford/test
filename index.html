@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Map title here</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <link href='css/mapbox-gl.css' rel='stylesheet'/>
+  <link href='css/bootstrap-grid.css' rel='stylesheet'/>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="css/chosen.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    body {
+		margin:0;
+		padding:0;
+		font-family: 'Open Sans', sans-serif;
+		width:100%;
+/*		max-width:800px;
+*/		margin: 0px auto;
+		display:table;
+	}
+
+	#header{
+		height:70px;
+		width:100%
+	}
+
+  #people {
+    font-size:12px;
+  }
+
+	.mapboxgl-ctrl-group .mapboxgl-ctrl-compass {
+		display: none;
+	}
+
+  /* Button group styles */
+
+  #primary {
+    margin-bottom: 32px;
+  }
+
+  .btn-form {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-family: 'Open Sans',Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .form-group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    cursor: pointer;
+    height: 40px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .form-group:last-child {
+    border-right: solid 1px #A6A8AB;
+  }
+
+  /* Primary button group */
+
+  .label-primary {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #333;
+    background: #F9F9F9;
+    width: 112px;
+    border-top: solid 1px #A6A8AB;
+    border-left: solid 1px #A6A8AB;
+    border-bottom: solid 1px #A6A8AB;
+  }
+
+  .label-primary:hover {
+    background: #003C57;
+    color: #fff;
+    border-color: #003C57;
+  }
+
+  .radio-primary {
+    display: none;
+  }
+
+  .radio-primary:checked + .label-primary {
+    background: #206095;
+    color: #fff;
+    border-color: #206095;
+    cursor: default;
+  }
+
+  [role="radio"]:focus {
+    outline: 3px solid #FF9933 !important;
+    outline-offset: -1px;
+    background-color:#003C57;
+    z-index: 1;
+  }
+
+
+	@media (min-width: 599px) {
+		#map {
+			height: 700px;
+			/* width: 100%; */
+		}
+
+		#selectNav {
+			/* position:absolute; */
+			top:0px;
+			left:0px;
+			width:200px;
+			height:40px;
+			background-color:rgba(255,255,255,0.8);
+			z-index:1;
+		}
+
+		#keydiv {
+			position:absolute;
+			top:40px;
+			left:0px;
+			width:200px;
+			height:140px;
+			background-color:rgba(255,255,255,0.8);
+			z-index:1;
+		}
+
+		#currVal {
+			font-size:14px;
+
+		}
+	}
+
+	@media (max-width: 600px) {
+
+		 body {
+			height: 620px;
+		}
+
+	    #map {
+			position:absolute;
+			top:0px;
+			margin-top:120px;
+			height: 500px;
+			width: 100%;
+			overflow:visible;
+		}
+
+		#selectNav {
+			position:absolute;
+			top:-120px;
+			left:0px;
+			width:100%;
+			height:40px;
+			background-color:rgba(255,255,255,0.8);
+			z-index:3;
+		}
+
+		#keydiv {
+			position:absolute;
+			top:-80px;
+			left:0px;
+			width:100%;
+			height:80px;
+			background-color:rgba(255,255,255,0.8);
+			z-index:1;
+		}
+
+		#currVal {
+			font-size:14px;
+
+		}
+
+		.mapboxgl-ctrl-fullscreen {
+			display:none !important;
+		}
+	}
+
+
+.key /* required */
+{
+	display: inline-block;
+	margin: 0 0 1em 0;
+	padding: 0;
+	line-height: 15px;
+}
+.key .legendlabel {
+	white-space: nowrap;
+	margin-right: 13px;
+	font-size: 12px;
+	color: #333;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.key .percentlabel {
+	white-space: nowrap;
+	margin-right: 13px;
+	font-size: 12px;
+	float: right;
+	color: #333;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:right;
+}
+
+.key li/* required */
+{
+	margin: 2px 23px 2px 10px;
+    padding: 0;
+    line-height: 15px;
+}
+.key b /* required */
+{
+	display: inline-block;
+	width: 35px;
+	height: 15px;
+	margin-right: 6px;
+	float: right;
+	background-color:none;
+	margin-top:8px;
+	border-radius:15px;
+}
+.legendBlocks{ /* new for Cluster chart */
+	width: 15px !important;
+	margin-top:0px !important;
+}
+.key legendlabel/* required */
+{
+	white-space: nowrap;
+	font-size: 12px;
+	color: #333;
+	font-weight: normal;
+}
+
+.key .percentlabel/* required */
+{
+	white-space: nowrap;
+	font-size: 12px;
+	width: 40px;
+	color: #333;
+	float:right;
+	font-weight: normal;
+}
+
+.key .legendRect {
+
+	float: left;
+    /*width: 10px;*/
+    height: 13px;
+    background-color: #666;
+}
+
+#pcText {
+			width: 130px;
+			height:20px;
+			padding: 3px;
+			color: #999999;
+}
+
+.btnEnable {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 40px;
+    border: none;
+    padding: 6px 0;
+    background-color: #0084d1;
+    font: 700 16px Arial;
+    color: #FFF;
+    filter: inherit;
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+</style>
+
+</head>
+<body>
+
+  <!-- <form class="btn-form" role="radiogroup">
+    <div class="form-group" role="radio" tabindex="0">
+      <input id="button-1" class="radio-primary" type="radio" name="button" value="pollution_SO2" aria-checked="true" checked>
+      <label class="label-primary" for="button-1">SO2</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="2">
+      <input id="button-2" class="radio-primary" type="radio" name="button" value="pollution_O3" aria-checked="false">
+      <label class="label-primary" for="button-2">O3</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="3">
+      <input id="button-3" class="radio-primary" type="radio" name="button" value="pollution_NO2" aria-checked="false">
+      <label class="label-primary" for="button-3">NO2</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="0">
+      <input id="button-4" class="radio-primary" type="radio" name="button" value="pollution_NH3" aria-checked="false">
+      <label class="label-primary" for="button-4">NH3</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="2">
+      <input id="button-5" class="radio-primary" type="radio" name="button" value="pollution_PM10" aria-checked="false">
+      <label class="label-primary" for="button-5">PM10</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="3">
+      <input id="button-6" class="radio-primary" type="radio" name="button" value="pollution_PM25" aria-checked="false">
+      <label class="label-primary" for="button-6">PM25</label>
+    </div>
+    <div class="form-group" role="radio" tabindex="0">
+      <input id="button-7" class="radio-primary" type="radio" name="button" value="pollution_total" aria-checked="false">
+      <label class="label-primary" for="button-7">Total</label>
+    </div>
+  </form> -->
+
+  <div id="info-box" class="col-xs-4">
+    <div id='selectNav'>
+      <form id="pcForm">
+        <input id="pcText" class="picaarticle" type="text" tabindex="1" placeholder="e.g. NP10 8XG">
+        <button class="btnEnable" id="submitPost" type="submit">GO!</button>
+      </form>
+    </div>
+    <div id="pollution-removed"></div>
+    <!-- <p>SO2: <span id='SO2'></span></p>
+    <p>O3: <span id='O3'></span></p>
+    <p>NO2: <span id='NO2'></span></p>
+    <p>NH3: <span id='NH3'></span></p>
+    <p>PM10: <span id='PM10'></span></p>
+    <p>PM25: <span id='PM25'></span></p>
+    <p>Total: <span id='Total'></span></p> -->
+  </div>
+
+  <div id='map' class="col-xs-8">
+    <select id="pollutant-select" class="js-example-basic-single" name="state">
+      <option value="pollution_SO2">SO2</option>
+      <option value="pollution_O3">O3</option>
+      <option value="pollution_NO2">NO2</option>
+      <option value="pollution_NH3">NH3</option>
+      <option value="pollution_PM10">PM10</option>
+      <option value="pollution_PM25">PM25</option>
+      <option value="pollution_total">Total</option>
+    </select>
+    <button id="switch">switch</button>
+  	<div id='keydiv'></div>
+  </div>
+
+<!--<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>-->
+
+<script src="https://cdn.ons.gov.uk/vendor/d3/4.2.7/d3.min.js"></script>
+<script src="js/topojson.v2.min.js"></script>
+<script src="js/simple-statistics.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/d3-queue.min.js"></script>
+<script src="js/colorbrewer.js"></script>
+<script src="https://cdn.ons.gov.uk/vendor/jquery/2.1.4/jquery.min.js"></script>
+<script src="js/chosen.jquery.js"></script>
+<script src="js/limit.js"></script>
+<script src="https://cdn.ons.gov.uk/vendor/pym/0.4.2/pym.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
+
+
+<!--<script src='js/mapbox-gl.js'></script>-->
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js'></script>
+
+
+<script src='js/turf.min.js'></script>
+<script src="js/script.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('.js-example-basic-single').select2();
+});
+</script>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})
+(window,document,'script','dataLayer','GTM-MBCBVQS');
+</script>
+
+<noscript>
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MBCBVQS" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+
+<noscript>
+	<p>Your browser does not support JavaScript. If you're able to please enable Javascript to view the map.</p>
+</noscript>
+
+</body>
+</html>

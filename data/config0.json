@@ -1,0 +1,12 @@
+{"ons":{
+"maptitle": "map about pollution",
+"varcolour": "PuBu",
+"varunit": "change in months",
+"groups":["white","black","asian","mixed","other"],
+"colours":["#377eb8","#ff7f00","#4daf4a","#984ea3","#e41a1c"],
+"displaydecimals": 1,
+"legenddecimals": 0,
+"breaks": [[0,10,20,30,40,50]],
+"dropticks": false,
+"numberBreaks": 5
+}}
